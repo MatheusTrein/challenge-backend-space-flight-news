@@ -1,0 +1,601 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "space-flight-news-api",
+    "description": "Desafio de NodeJS baseado na API Space Flight News da plataforma coodesh",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/articles": {
+      "post": {
+        "tags": ["Articles"],
+        "summary": "Create a new article",
+        "description": "Create a new article",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "required": true,
+                    "example": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station"
+                  },
+                  "featured": {
+                    "type": "boolean",
+                    "required": false,
+                    "example": false
+                  },
+                  "url": {
+                    "type": "string",
+                    "required": true,
+                    "example": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station"
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "required": true,
+                    "example": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD"
+                  },
+                  "newsSite": {
+                    "type": "string",
+                    "required": true,
+                    "example": "NASA"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "required": true,
+                    "example": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21."
+                  },
+                  "launches": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "required": false,
+                      "example": {
+                        "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                        "provider": "Launch Library 2"
+                      }
+                    }
+                  },
+                  "events": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "required": false,
+                      "example": {
+                        "id": 294,
+                        "provider": "Launch Library 2"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "ccdf8db2-2a48-46c2-b231-dce4d392255b"
+                    },
+                    "title": {
+                      "type": "string",
+                      "example": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station"
+                    },
+                    "imageUrl": {
+                      "type": "string",
+                      "example": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD"
+                    },
+                    "newsSite": {
+                      "type": "string",
+                      "example": "NASA"
+                    },
+                    "summary": {
+                      "type": "string",
+                      "example": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21."
+                    },
+                    "publishedAt": {
+                      "type": "date",
+                      "example": "2022-01-14T16:12:00.000Z"
+                    },
+                    "updatedAt": {
+                      "type": "date",
+                      "example": "2022-01-14T16:12:00.000Z"
+                    },
+                    "featured": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "launches": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                          "provider": "Launch Library 2"
+                        }
+                      ]
+                    },
+                    "events": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "id": 294,
+                          "provider": "Launch Library 2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error: Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Error: Bad Request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Articles"],
+        "summary": "List articles by page",
+        "description": "List articles if send querys page as number and perPage as number",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "description": "number of page, to get all send page = 0",
+            "schema": {
+              "type": "number",
+              "format": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "required": false,
+            "description": "how many articles per page, if perPage is undefined and page greater than 1, the default value of perPage is 10",
+            "schema": {
+              "type": "number",
+              "format": "int"
+            }
+          },
+          {
+            "in": "query",
+            "name": "titleSearch",
+            "required": false,
+            "description": "search articles by title",
+            "schema": {
+              "type": "string",
+              "format": "text"
+            }
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "required": false,
+            "description": "Sort articles by date. Two options are allowed: 'ASC' and 'DESC'. Default order is 'DESC'",
+            "schema": {
+              "type": "string",
+              "format": "text"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "example": {
+                      "id": "38b1618f-b684-4acf-9337-8aabaeee8ad3",
+                      "title": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station",
+                      "featured": false,
+                      "url": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station",
+                      "imageUrl": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD",
+                      "newsSite": "NASA",
+                      "summary": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21.",
+                      "publishedAt": "2022-01-14T16:12:00.000Z",
+                      "updatedAt": "2022-01-18T18:54:18.772Z",
+                      "launches": [
+                        {
+                          "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                          "provider": "Launch Library 2"
+                        }
+                      ],
+                      "events": [
+                        {
+                          "id": 294,
+                          "provider": "Launch Library 2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error: Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Error: Bad Request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        }
+      },
+      "/articles/{id}": {
+        "put": {
+          "tags": ["Articles"],
+          "summary": "Updates an existing article",
+          "description": "Updates an existing article by id",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Id of existing article",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "required": true,
+                      "example": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station"
+                    },
+                    "featured": {
+                      "type": "boolean",
+                      "required": true,
+                      "example": false
+                    },
+                    "url": {
+                      "type": "string",
+                      "required": true,
+                      "example": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station"
+                    },
+                    "imageUrl": {
+                      "type": "string",
+                      "required": true,
+                      "example": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD"
+                    },
+                    "newsSite": {
+                      "type": "string",
+                      "required": true,
+                      "example": "NASA"
+                    },
+                    "summary": {
+                      "type": "string",
+                      "required": true,
+                      "example": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21."
+                    },
+                    "publishedAt": {
+                      "type": "date",
+                      "required": true,
+                      "example": "2022-01-13T21:33:00.000Z"
+                    },
+                    "updatedAt": {
+                      "type": "date",
+                      "required": true,
+                      "example": "2022-01-13T21:33:00.000Z"
+                    },
+                    "launches": {
+                      "type": "array",
+                      "required": true,
+                      "items": {
+                        "type": "object",
+                        "required": false,
+                        "example": {
+                          "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                          "provider": "Launch Library 2"
+                        }
+                      }
+                    },
+                    "events": {
+                      "type": "array",
+                      "required": true,
+                      "items": {
+                        "type": "object",
+                        "required": false,
+                        "example": {
+                          "id": 294,
+                          "provider": "Launch Library 2"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "ccdf8db2-2a48-46c2-b231-dce4d392255b"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station"
+                      },
+                      "url": {
+                        "type": "string",
+                        "example": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station"
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "example": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD"
+                      },
+                      "newsSite": {
+                        "type": "string",
+                        "example": "NASA"
+                      },
+                      "summary": {
+                        "type": "string",
+                        "example": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21."
+                      },
+                      "publishedAt": {
+                        "type": "date",
+                        "example": "2022-01-13T21:33:00.000Z"
+                      },
+                      "updatedAt": {
+                        "type": "date",
+                        "example": "2022-01-18 15:54:17.377 -0300"
+                      },
+                      "featured": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "launches": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                            "provider": "Launch Library 2"
+                          }
+                        ]
+                      },
+                      "events": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "id": 294,
+                            "provider": "Launch Library 2"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Error: Bad Request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Article not exists"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get": {
+          "tags": ["Articles"],
+          "summary": "List an existing article",
+          "description": "List an existing article by id",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Id of existing article",
+              "schema": {
+                "type": "string",
+                "format": "uuid",
+                "example": "c99da882-7167-453c-847d-87e943ef1d17"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "ccdf8db2-2a48-46c2-b231-dce4d392255b"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "NASA TV to Air SpaceX Cargo Dragon Departure from Space Station"
+                      },
+                      "url": {
+                        "type": "string",
+                        "example": "http://www.nasa.gov/press-release/nasa-tv-to-air-spacex-cargo-dragon-departure-from-space-station"
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "example": "https://www.nasa.gov/sites/default/files/thumbnails/image/51802388049_2967665350_k_1.jpg?itok=-H2R_-wD"
+                      },
+                      "newsSite": {
+                        "type": "string",
+                        "example": "NASA"
+                      },
+                      "summary": {
+                        "type": "string",
+                        "example": "A SpaceX Dragon cargo resupply spacecraft is set to depart the International Space Station Friday, Jan. 21."
+                      },
+                      "publishedAt": {
+                        "type": "date",
+                        "example": "2022-01-14T16:12:00.000Z"
+                      },
+                      "updatedAt": {
+                        "type": "date",
+                        "example": "2022-01-15T09:48:18.471Z"
+                      },
+                      "featured": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "launches": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "id": "878ba32c-5e93-4d2b-95c3-24b60c8b05e7",
+                            "provider": "Launch Library 2"
+                          }
+                        ]
+                      },
+                      "events": {
+                        "type": "array",
+                        "example": [
+                          {
+                            "id": 294,
+                            "provider": "Launch Library 2"
+                          }
+                        ]
+                      }
+                    }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error: Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Article not exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Articles"],
+        "summary": "Delete an existing article",
+        "description": "List an existing article by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "Id of existing article",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "c99da882-7167-453c-847d-87e943ef1d17"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Article deleted"
+                    }
+                  }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error: Bad Request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string",
+                    "example": "Article not exists"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    }
+  }
+}
