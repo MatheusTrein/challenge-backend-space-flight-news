@@ -4,7 +4,7 @@ import { inject, injectable } from "tsyringe";
 import { Article } from "../infra/typeorm/entities/Article";
 import { IArticlesRepository } from "../repositories/IArticlesRepository";
 
-interface IRequest {
+interface IResponse {
   id?: number;
   featured: boolean;
   title: string;
@@ -43,7 +43,7 @@ class ImportArticles {
         `${this.baseUrl}/articles/count`
       );
 
-      const { data: articlesFromApi } = await axios.get<IRequest[]>(
+      const { data: articlesFromApi } = await axios.get<IResponse[]>(
         `${this.baseUrl}/articles`,
         {
           params: {
