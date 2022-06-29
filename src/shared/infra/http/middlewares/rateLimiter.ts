@@ -10,7 +10,7 @@ const getLimiter = () => {
   const limiter = new RateLimiterRedis({
     storeClient: redisClient,
     keyPrefix: "middleware",
-    points: 15,
+    points: 50,
     duration: 5,
     blockDuration: 60 * 60 * 24, //24hrs
   });

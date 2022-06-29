@@ -1,6 +1,7 @@
 import "dotenv/config";
 import "reflect-metadata";
 
+import cors from "cors";
 import typeORMConnection from "@shared/infra/typeorm";
 import express, { NextFunction, Request, Response } from "express";
 import "express-async-errors";
@@ -28,6 +29,10 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 const app = express();
+
+app.use(
+  cors({ origin: `${process.env.CLIENT_URL}:${process.env.CLIENT_PORT}` })
+);
 
 app.use(express.json());
 app.use(rateLimiter);
